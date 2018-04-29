@@ -25,10 +25,13 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
-		this.updateDOM = this.updateDOM.bind(this);
+		this.updateSpot = this.updateSpot.bind(this);
 		this.checkForWinner = this.checkForWinner.bind(this);
 		this.allThreeSame = this.allThreeSame.bind(this);
 		this.checkForCatsGame = this.checkForCatsGame.bind(this);
+		this.newGame = this.newGame.bind(this);
+		this.updateHeader = this.updateHeader.bind(this);
+
 
 		this.state = {
 			isXsTurn: true,
@@ -85,12 +88,16 @@ class App extends Component {
 		
 		}
 	
-	updateDOM(spot, team){
-			spot.innerHTML = team;		
+	updateSpot(spot, team){
+			spot.innerHTML = team;	
 			this.setState({isXsTurn: team === "O" ? true : false});
 			document.getElementsByClassName("turn")[0].innerHTML = `It's ${this.state.isXsTurn ? "O" : "X"}'s turn`;
+			
 	}
-	
+	updateHeader(){
+		document.getElementsByClassName("turn")[0].innerHTML = `It's X's turn`;
+	}
+
 	handleClick(e) {
 		if(!this.state.gameOn){
 			return;
@@ -101,22 +108,35 @@ class App extends Component {
 		}
 			 
 		if(this.state.isXsTurn){
-			this.updateDOM(e.target, "X");
+			this.updateSpot(e.target, "X");
 		} 
 		else {
-			this.updateDOM(e.target, "O");
+			this.updateSpot(e.target, "O");
 		}
 		
 		this.checkForWinner();
 		this.checkForCatsGame();
 		
 	}
+
+	newGame(){
+
+		for(let i = 0; i < 9; i++){
+			document.getElementsByClassName('spot')[i].innerHTML = "";
+		}
+		this.setState({isXsTurn: true, gameOn: true});
+		this.updateHeader('X');
+
+	}
 	
   render() {
     return (
       <div className="App">
         <h1 className="header">Tic Tac Toe</h1>
+
 				<div className = "turn">It's X's turn</div>
+				<button onClick={this.newGame}>New Game</button>
+
 
         <TicTacToeBoard  onclick={this.handleClick} />
 
